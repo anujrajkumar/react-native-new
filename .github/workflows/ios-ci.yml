@@ -22,28 +22,8 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
-
-#     - name: Cache npm dependencies
-#       uses: actions/cache@v2
-#       with:
-#         path: '~/.npm'
-#         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-#         restore-keys: |
-#           ${{ runner.os }}-node-
-#     - run: npm ci
-
-#     - run: xcode-select -p
-
-#     - name: Cache pods
-#       uses: actions/cache@v1
-#       with:
-#         path: ios/Pods
-#         key: ${{ runner.OS }}-pods-cache-${{ hashFiles('**/ios/Podfile.lock') }}
-#         restore-keys: |
-#           ${{ runner.OS }}-pods-cache-
-#     - run: pod install
-#       working-directory: ios
-#       name: Install pod dependencies
+    
+    
 
     - name: Build iOS (debug)
       run: "xcodebuild \
@@ -53,11 +33,11 @@ jobs:
         -sdk iphoneos \
         -configuration Debug \
         -UseModernBuildSystem=NO \
-        -archivePath $PWD/myproject \
+        -archivePath $PWD/firstapp \
         CODE_SIGNING_ALLOWED=NO"
 
     - name: Compress .xcarchive
-      run: zip -r -9 myproject.xcarchive.zip $PWD/myproject.xcarchive/
+      run: zip -r -9 firstapp.xcarchive.zip $PWD/firstapp.xcarchive/
 
     - uses: actions/upload-artifact@v2
       with:
