@@ -13,24 +13,53 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    runs-on: macos-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 14.x
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+    - name: Cache npm dependencies
+      uses: actions/cache@v2
+      with:
+        path: '~/.npm'
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - run: npm ci
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+    - run: xcode-select -p
+
+#     - name: Cache pods
+#       uses: actions/cache@v1
+#       with:
+#         path: ios/Pods
+#         key: ${{ runner.OS }}-pods-cache-${{ hashFiles('**/ios/Podfile.lock') }}
+#         restore-keys: |
+#           ${{ runner.OS }}-pods-cache-
+#     - run: pod install
+#       working-directory: ios
+#       name: Install pod dependencies
+
+    - name: Build iOS (debug)
+      run: "xcodebuild \
+         -workspace ios/firstapp.xcodeproj \
+         -scheme firstapp \
+        clean archive \
+        -sdk iphoneos \
+        -configuration Debug \
+        -UseModernBuildSystem=NO \
+        -archivePath $PWD/myproject \
+        CODE_SIGNING_ALLOWED=NO"
+
+    - name: Compress .xcarchive
+      run: zip -r -9 myproject.xcarchive.zip $PWD/myproject.xcarchive/
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: ios-xarchive
+        path: firstapp.xcarchive.zip
