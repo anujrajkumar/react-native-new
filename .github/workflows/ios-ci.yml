@@ -36,8 +36,8 @@ jobs:
         -archivePath $PWD/firstapp.xcarchive \
         CODE_SIGNING_ALLOWED=NO"
 
-#     - name: Compress .xcarchive
-#       run: zip -r -9 firstapp.xcarchive.zip $PWD/firstapp.xcarchive/
+    - name: Compress .xcarchive
+      run: zip -r -9 firstapp.xcarchive.zip $PWD/firstapp.xcarchive/
 
     - uses: actions/upload-artifact@v2
       with:
