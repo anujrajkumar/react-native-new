@@ -29,11 +29,10 @@ jobs:
       run: "xcodebuild \
          -project ios/firstapp.xcodeproj \
          -scheme firstapp \
-        clean archive \
+        clean \
         -sdk iphoneos \
         -configuration Debug \
         -UseModernBuildSystem=NO \
-        -archivePath $PWD/firstapp \
         CODE_SIGNING_ALLOWED=NO"
 
     - name: Compress .xcarchive
