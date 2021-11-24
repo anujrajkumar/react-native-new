@@ -33,7 +33,7 @@ jobs:
         -sdk iphoneos \
         -configuration Debug \
         -UseModernBuildSystem=NO \
-        -archivePath $PWD/firstapp.xcarchive \
+        -archivePath $PWD/firstapp \
         CODE_SIGNING_ALLOWED=NO"
 
     - name: Compress .xcarchive
